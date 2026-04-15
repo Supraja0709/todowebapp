@@ -11,7 +11,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:4173',
-    'https://supraja0709.github.io'
+    'https://supraja0709.github.io',
+    'https://todowebapp-production-64ef.up.railway.app'
   ],
   credentials: true
 }));
