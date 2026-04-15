@@ -7,7 +7,14 @@ const todoRoutes = require('./routes/todoRoutes');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'https://supraja0709.github.io'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
