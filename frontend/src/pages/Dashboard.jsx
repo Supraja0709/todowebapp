@@ -25,6 +25,7 @@ function Dashboard() {
   const { user, logout } = useAuth();
   const { addToast } = useToast();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchTodos(); }, []);
 
   const fetchTodos = async () => {

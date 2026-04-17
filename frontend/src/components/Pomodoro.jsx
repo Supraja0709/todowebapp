@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { IoPlay, IoPause, IoRefresh, IoCafeOutline, IoFlashOutline } from 'react-icons/io5';
 
 function Pomodoro() {
@@ -7,6 +7,19 @@ function Pomodoro() {
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState('focus'); // focus, break
   const timerRef = useRef(null);
+
+  const handleModeSwitch = useCallback(() => {
+    const nextMode = mode === 'focus' ? 'break' : 'focus';
+    const nextTime = nextMode === 'focus' ? 25 : 5;
+    setMode(nextMode);
+    setMinutes(nextTime);
+    setSeconds(0);
+    setIsActive(false);
+    
+    // Play a notification sound
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    audio.play().catch(e => console.log('Audio error:', e));
+  }, [mode]);
 
   useEffect(() => {
     if (isActive) {
@@ -25,20 +38,8 @@ function Pomodoro() {
       clearInterval(timerRef.current);
     }
     return () => clearInterval(timerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, minutes, seconds]);
-
-  const handleModeSwitch = () => {
-    const nextMode = mode === 'focus' ? 'break' : 'focus';
-    const nextTime = nextMode === 'focus' ? 25 : 5;
-    setMode(nextMode);
-    setMinutes(nextTime);
-    setSeconds(0);
-    setIsActive(false);
-    
-    // Play a notification sound
-    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-    audio.play().catch(e => console.log('Audio error:', e));
-  };
 
   const toggleTimer = () => setIsActive(!isActive);
 

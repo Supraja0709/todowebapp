@@ -9,13 +9,15 @@ exports.getTodos = async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch tasks' });
+    console.error('Fetch tasks error:', err);
+    res.status(500).json({ error: 'Failed to fetch tasks: ' + err.message });
   }
 };
 
 exports.createTodo = async (req, res) => {
   try {
+    console.log('CreateTodo - User:', req.user);
+    console.log('CreateTodo - Body:', req.body);
     const userId = req.user.id;
     const { title, priority, category, due_date } = req.body;
     
@@ -28,11 +30,11 @@ exports.createTodo = async (req, res) => {
       [title, userId, priority || 'Medium', category || 'General', due_date || null]
     );
 
-    const [newTask] = await db.query('SELECT * FROM todos WHERE id = ?', [result.insertId]);
+    const [newTask] = await db.query('SELECT * FROM todos WHERE id = ?', [Number(result.insertId)]);
     res.status(201).json(newTask[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to create task' });
+    console.error('Task creation error:', err);
+    res.status(500).json({ error: 'Failed to create task: ' + err.message });
   }
 };
 
@@ -63,8 +65,8 @@ exports.updateTodo = async (req, res) => {
     const [updatedTask] = await db.query('SELECT * FROM todos WHERE id = ?', [id]);
     res.json(updatedTask[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to update task' });
+    console.error('Update task error:', err);
+    res.status(500).json({ error: 'Failed to update task: ' + err.message });
   }
 };
 
@@ -81,7 +83,7 @@ exports.deleteTodo = async (req, res) => {
     
     res.json({ message: 'Task deleted successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to delete task' });
+    console.error('Delete task error:', err);
+    res.status(500).json({ error: 'Failed to delete task: ' + err.message });
   }
 };
